@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
+import 'package:shopx/controllers/product_controlller.dart';
+
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final ProductController productController = Get.put(ProductController());
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +52,31 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(6),
+              child: Obx(
+                (() => MasonryGridView.builder(
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      itemCount: productController.productList.length,
+                      gridDelegate:
+                          const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemBuilder: (context, index) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(7),
+                          child: Image.network(
+                              "https://source.unsplash.com/random?sig=$index"),
+                        );
+                      },
+                    )),
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 }
-
-
