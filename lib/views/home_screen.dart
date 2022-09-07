@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:shopx/controllers/product_controlller.dart';
+import 'package:shopx/views/product_tile.dart';
 
 class HomeScreen extends StatelessWidget {
   final ProductController productController = Get.put(ProductController());
@@ -54,24 +55,26 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              margin: EdgeInsets.all(6),
+              margin: const EdgeInsets.all(6),
               child: Obx(
-                (() => MasonryGridView.builder(
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                      itemCount: productController.productList.length,
-                      gridDelegate:
-                          const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                      ),
-                      itemBuilder: (context, index) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Image.network(
-                              "https://source.unsplash.com/random?sig=$index"),
-                        );
-                      },
-                    )),
+                (() {
+                  if (productController.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return MasonryGridView.builder(
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    itemCount: productController.productList.length,
+                    gridDelegate:
+                        const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ProductTile(
+                          product: productController.productList[index]);
+                    },
+                  );
+                }),
               ),
             ),
           )
